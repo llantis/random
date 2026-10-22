@@ -97,11 +97,13 @@ def main():
             except Exception as e:  # off-season sports 404/422; skip them
                 print(f"  skipped: {e}")
 
+    # Games already offered on an earlier day's slate are not offered again.
+    seen = {g["event_id"] for f in SLATES.glob("*.json") if f != out for g in json.loads(f.read_text())["games"]}
     games = []
     for sport, events in raw.items():
         for ev in sorted(events, key=lambda e: e["commence_time"]):
             start = parse_time(ev["commence_time"])
-            if not (now < start <= horizon):
+            if not (now < start <= horizon) or ev["id"] in seen:
                 continue
             g = build_game(ev, sport, cfg["bookmaker_preference"], len(games) + 1)
             if g:

@@ -15,7 +15,7 @@ Currently **paper mode**: no real money moves.
    locked once recorded.
 5. `scripts/leaderboard.py` writes `data/leaderboard.md` (P/L, ROI, record, Brier calibration).
 
-The scheduled task's prompt is `prompts/daily.md`.
+The daily runner prompt is `prompts/daily.md`. Schedule: 9am US Central (8:49, to avoid the top-of-hour rush), via a scheduled task that wakes a dedicated cloud runner session pinned to this branch.
 
 ## Files
 | Path | What |
