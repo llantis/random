@@ -1,0 +1,24 @@
+{
+  "mode": "paper",
+  "stake": 1.0,
+  "max_picks_per_player_per_day": 8,
+  "slate_window_hours": 30,
+  "regions": "us",
+  "markets": ["h2h", "spreads", "totals"],
+  "bookmaker_preference": ["draftkings", "fanduel", "betmgm", "caesars"],
+  "sports": [
+    "basketball_nba",
+    "americanfootball_nfl",
+    "americanfootball_ncaaf",
+    "icehockey_nhl",
+    "baseball_mlb",
+    "soccer_epl",
+    "soccer_uefa_champs_league"
+  ],
+  "players": [
+    {"name": "opus-max", "model": "opus", "effort": "max"},
+    {"name": "opus-low", "model": "opus", "effort": "low"},
+    {"name": "sonnet-high", "model": "sonnet", "effort": "high"},
+    {"name": "haiku-medium", "model": "haiku", "effort": "medium"}
+  ]
+}
