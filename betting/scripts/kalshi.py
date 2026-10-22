@@ -39,6 +39,18 @@ MONTHS = {m: i for i, m in enumerate(
     ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"], 1)}
 
 
+def load_key(value):
+    """Accept a base64'd PEM file, raw PEM text, or the bare base64 body of the PEM (DER)."""
+    from cryptography.hazmat.primitives import serialization
+    value = value.strip()
+    if "BEGIN" in value:
+        return serialization.load_pem_private_key(value.encode(), password=None)
+    raw = base64.b64decode(value + "=" * (-len(value) % 4))
+    if b"BEGIN" in raw:
+        return serialization.load_pem_private_key(raw, password=None)
+    return serialization.load_der_private_key(raw, password=None)
+
+
 class Kalshi:
     def __init__(self, env):
         self.base = HOSTS[env]
@@ -46,8 +58,7 @@ class Kalshi:
         pem = os.environ.get("KALSHI_PRIVATE_KEY_B64")
         self.key = None
         if self.key_id and pem:
-            from cryptography.hazmat.primitives import serialization
-            self.key = serialization.load_pem_private_key(base64.b64decode(pem), password=None)
+            self.key = load_key(pem)
 
     def _sign(self, msg):
         from cryptography.hazmat.primitives import hashes
