@@ -40,7 +40,16 @@ python3 record_picks.py opus-max picks.json
 python3 leaderboard.py
 ```
 
-## Phase 2: real money (not built yet)
-Kalshi API (US, CFTC-regulated), demo environment first. Only a placement script holds the key,
-reading already-validated ledger rows; caps (per bet, per day, total) enforced in code.
+## Kalshi (demo)
+`scripts/kalshi.py` mirrors validated ledger picks onto Kalshi. It is the only code that holds the key.
+- `check` (auth + balance), `place` (today's picks), `settle` (fills + results) → `data/kalshi_orders.csv`.
+- Mapping: ML → YES on "Team wins"; draw → YES on "Tie"; favorite −X → YES on "Team wins by over X";
+  underdog +X → NO on the favorite's "wins by over X"; Over/Under X → YES/NO on "Over X".
+- Skips (logged with a reason) when there's no matching market or strike, no usable ask, the ask is more
+  than `max_slippage` worse than the slate price, or a cap would be exceeded.
+- Config `kalshi`: `env` (`demo`/`prod`), `dry_run`, `max_slippage`, `daily_cap`, `total_cap` (dollars).
+- Secrets: `KALSHI_API_KEY_ID`, `KALSHI_PRIVATE_KEY_B64` (base64 of the private key PEM).
+- The paper ledger stays the tournament score; Kalshi shows what actually executes. Real money means
+  `env: prod` with production keys, and should only be switched deliberately.
+
 Sportsbooks such as DraftKings or FanDuel are not supported: they have no betting API and ban automation.
